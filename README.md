@@ -44,7 +44,10 @@ User – user can create account & chat with other users while keeping track of 
 Message Handler – handles processing the chat messages in ways like processing the message content, identifying the sender/recipient & delivering of messages to the clients. 
 Client Handler – handles individual client message receiving & holding/storing client information including logs, client connection, account information. I believe it also handles clients using commands to access other resources within the program. 
 
-![Project Screenshot](Images/Project%20Diagram.png) 
+
+<div align="center">
+  <img src="Images/Project%20Diagram.png" alt="Project Diagram" width="500"/>
+</div>
 
 
 

@@ -1,21 +1,21 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\",
+  "WorkspaceRootPath": "D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CC979ED5-F677-40AD-B998-322C06D9C8E0}|Application\\Server\\Server.vcxproj|D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Server\\Server.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{CC979ED5-F677-40AD-B998-322C06D9C8E0}|Application\\Server\\Server.vcxproj|D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Server\\Server.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{CC979ED5-F677-40AD-B998-322C06D9C8E0}|Application\\Server\\Server.vcxproj|solutionrelative:Application\\Server\\Server.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{96EC9D38-5632-4E11-A978-E7A231C4FF1A}|Application\\Client\\Client\\Client.vcxproj|D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Client\\Client.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{96EC9D38-5632-4E11-A978-E7A231C4FF1A}|Application\\Client\\Client\\Client.vcxproj|D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Client\\Client.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{96EC9D38-5632-4E11-A978-E7A231C4FF1A}|Application\\Client\\Client\\Client.vcxproj|solutionrelative:Application\\Client\\Client.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{96EC9D38-5632-4E11-A978-E7A231C4FF1A}|Application\\Client\\Client\\Client.vcxproj|D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Client\\Client.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{96EC9D38-5632-4E11-A978-E7A231C4FF1A}|Application\\Client\\Client\\Client.vcxproj|D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Client\\Client.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{96EC9D38-5632-4E11-A978-E7A231C4FF1A}|Application\\Client\\Client\\Client.vcxproj|solutionrelative:Application\\Client\\Client.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CC979ED5-F677-40AD-B998-322C06D9C8E0}|Application\\Server\\Server.vcxproj|D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Server\\Server.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{CC979ED5-F677-40AD-B998-322C06D9C8E0}|Application\\Server\\Server.vcxproj|D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Server\\Server.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{CC979ED5-F677-40AD-B998-322C06D9C8E0}|Application\\Server\\Server.vcxproj|solutionrelative:Application\\Server\\Server.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -56,35 +56,33 @@
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "Server.h",
-              "DocumentMoniker": "D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Server\\Server.h",
+              "DocumentMoniker": "D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Server\\Server.h",
               "RelativeDocumentMoniker": "Application\\Server\\Server.h",
-              "ToolTip": "D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Server\\Server.h",
+              "ToolTip": "D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Server\\Server.h",
               "RelativeToolTip": "Application\\Server\\Server.h",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAACAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-09-13T01:02:06.482Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-13T01:02:06.482Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "Client.h",
-              "DocumentMoniker": "D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Client\\Client.h",
+              "DocumentMoniker": "D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Client\\Client.h",
               "RelativeDocumentMoniker": "Application\\Client\\Client.h",
-              "ToolTip": "D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Client\\Client.h",
+              "ToolTip": "D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Client\\Client.h",
               "RelativeToolTip": "Application\\Client\\Client.h",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAvAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-09-12T23:04:29.993Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-12T23:04:29.993Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Server.cpp",
-              "DocumentMoniker": "D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Server\\Server.cpp",
+              "DocumentMoniker": "D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Server\\Server.cpp",
               "RelativeDocumentMoniker": "Application\\Server\\Server.cpp",
-              "ToolTip": "D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Server\\Server.cpp",
+              "ToolTip": "D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Server\\Server.cpp",
               "RelativeToolTip": "Application\\Server\\Server.cpp",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAF0AAAAQAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -95,14 +93,13 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "Client.cpp",
-              "DocumentMoniker": "D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Client\\Client.cpp",
+              "DocumentMoniker": "D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Client\\Client.cpp",
               "RelativeDocumentMoniker": "Application\\Client\\Client.cpp",
-              "ToolTip": "D:\\School\\Computer Networks\\Week 1\\Lab 1.4\\SpaghettiRelay\\SpaghettiRelay\\Project 2018\\Application\\Client\\Client.cpp",
+              "ToolTip": "D:\\School\\Computer Networks\\Week 2\\Project\\Chat Server Console\\Chat-Server-Console\\Application\\Client\\Client.cpp",
               "RelativeToolTip": "Application\\Client\\Client.cpp",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAADAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-09-10T18:28:35.129Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-10T18:28:35.129Z"
             }
           ]
         }

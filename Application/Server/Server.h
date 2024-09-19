@@ -1,6 +1,6 @@
 #pragma once
-#include "../platform.h"
-#include "../definitions.h"
+#include <WinSock2.h>
+#include "stdint.h"
 
 #define _CRT_SECURE_NO_WARNINGS 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS

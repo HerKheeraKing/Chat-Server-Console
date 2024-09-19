@@ -42,9 +42,6 @@ int Server::init(uint16_t port)
 			return CONNECT_ERROR;
 		}
 	}
-
-	// Master Set
-	
 	
 
 	return SUCCESS;

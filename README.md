@@ -46,7 +46,7 @@ Client Handler – handles individual client message receiving & holding/storing
 
 
 <div align="center">
-  <img src="Images/Project%20Diagram.png" alt="Project Diagram" width="500"/>
+  <img src="Images/Project%20Diagram.png" alt="Project Diagram" width="800"/>
 </div>
 
 

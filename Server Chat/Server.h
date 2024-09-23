@@ -26,6 +26,8 @@ public:
 
 	SOCKET listenSocket;
 	SOCKET socketCom;
+	fd_set masterSet;
+	fd_set readySet; 
 
 };
 

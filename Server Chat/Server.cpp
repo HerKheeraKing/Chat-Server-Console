@@ -44,7 +44,8 @@ int Server::init(uint16_t port)
 	}
 
 	// Master Set 
-
+	FD_ZERO(&masterSet); 
+	FD_SET(socketCom, &masterSet); 
 
 
 	return SUCCESS;

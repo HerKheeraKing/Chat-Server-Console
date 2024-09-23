@@ -9,7 +9,7 @@ x64/Release/
 *.exe
 *.idb
 
-
+# Other folders to ignore 
 .vs/
 .vs/Server Chat/FileContentIndex/
-
+Server Chat/x64

@@ -1,2 +1,15 @@
+# Ignore Debug/Release build output directories
+x64/Debug/
+x64/Release/
+
+# Ignore specific debug files
+*.obj
+*.ilk
+*.pdb
+*.exe
+*.idb
+
+
+.vs/
 .vs/Server Chat/FileContentIndex/
 

@@ -14,18 +14,33 @@ enum ErrorCodes : int
 	STARTUP_ERROR = 6, ADDRESS_ERROR = 7, PARAMETER_ERROR = 8
 };
 
+
 class Server
 {
 public:
 
+	// Variables
+	struct timeval 
+	{
+		int tv_sec = 5;
+		int tv_msec = 0;
+	};
+
+	uint8_t chatCapacity;
+	uint16_t tcpPort; 
+
+	// Functions 
 	int init(uint16_t port);
 	int readMessage(char* buffer, int32_t size);
 	int sendMessage(char* data, int32_t length);
 	int alanticChase(char* data, int32_t length);
 	void stop();
 
+	// Sockets 
 	SOCKET listenSocket;
 	SOCKET socketCom;
+
+	// Socket manager & ready set for usage of sockets from socket manager
 	fd_set masterSet;
 	fd_set readySet; 
 

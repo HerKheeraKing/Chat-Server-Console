@@ -43,13 +43,17 @@ int Server::init(uint16_t port)
 		}
 	}
 
-	// Master Set 
+	// Master Set set-up
+	// Timeout in header
 	FD_ZERO(&masterSet); 
 	FD_SET(socketCom, &masterSet); 
+	FD_SET(listenSocket, &masterSet); 
 
 
 	return SUCCESS;
 }
+
+
 int Server::readMessage(char* buffer, int32_t size)
 {
 	int total = 0;

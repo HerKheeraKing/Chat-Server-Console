@@ -1,18 +1,12 @@
 #pragma once
-//#include "Error.h" 
+#include "Error.h"  
 #include <winsock2.h>
 #include "stdint.h"
+#include <string>
+using namespace std;
 
 //#define _CRT_SECURE_NO_WARNINGS 
 //#define _WINSOCK_DEPRECATED_NO_WARNINGS
-
-// Error Defining 
-enum ErrorCodes : int 
-{
-	SUCCESS = 0, SHUTDOWN = 1, DISCONNECT = 2,
-	BIND_ERROR = 3, CONNECT_ERROR = 4, SETUP_ERROR = 5,
-	STARTUP_ERROR = 6, ADDRESS_ERROR = 7, PARAMETER_ERROR = 8
-};
 
 
 class Server
@@ -26,8 +20,11 @@ public:
 		int tv_msec = 0;
 	};
 
-	uint8_t chatCapacity;
-	uint16_t tcpPort; 
+	uint8_t chatCapacity = 0;
+	uint16_t tcpPort = 0; 
+	uint16_t serverPort = 0; 
+	char hostName[256];
+	std::string fullHostName = "";
 
 	// Functions 
 	int init(uint16_t port);

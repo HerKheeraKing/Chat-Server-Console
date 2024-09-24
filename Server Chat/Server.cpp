@@ -22,6 +22,18 @@ int Server::init(uint16_t port)
 		return BIND_ERROR;
 	}
 
+	// Getting host name 
+	if (gethostname(hostName, sizeof(hostName)) == 0)
+	{
+		fullHostName = std::string(hostName); 
+	}
+	else
+	{
+		return HOSTNAME_ERROR; 
+	}
+	
+	// TODO: collect host IP & display to console
+
 	// Listening queue for connections 
 	result = listen(listenSocket, 1);
 	if (result == SOCKET_ERROR)
@@ -48,6 +60,7 @@ int Server::init(uint16_t port)
 	FD_ZERO(&masterSet); 
 	FD_SET(socketCom, &masterSet); 
 	FD_SET(listenSocket, &masterSet); 
+
 
 
 	return SUCCESS;

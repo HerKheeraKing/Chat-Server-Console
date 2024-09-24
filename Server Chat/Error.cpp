@@ -40,6 +40,10 @@ void Error::ErrorCode(int error)
         std::cout << "Messenger buffer is not big enough for message received. Buffer Error." << std::endl;
         break;
 
+    case HOSTNAME_ERROR:
+        std::cout << "Hostname is not set up correctly. Hostname Error." << std::endl;  
+        break;
+
     default:
         std::cout << "Messenger encountered an unknown error. Unknown Error." << std::endl;
         break;

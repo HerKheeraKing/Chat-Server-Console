@@ -11,17 +11,21 @@ Functions func;
 
 int main()
 {
+
     // Prompt the user for TCP Port number, chat..
     // capacity, and the command character is set to '@'.
     std::cout << "Welcome to the Chat Server, please provide the following information to get started!\n\n" << std::endl;
 
     func.TCPport(); 
-    
-    std::cout << "\n\n";
-
+    std::cout << "\n\n"; 
     func.chatCapacity(); 
-    
 
+    // Bind with user port 
+    server.init(server.tcpPort); 
+    
     //  TODO: Display host name & IP on the server console upon startup
-    //std::cout << "Host Name: " << server.fullHostName << std::endl; 
+    /*std::cout << "Host Name: " << server.fullHostName << std::endl; 
+    std::cout << "Address Info: " << server.addressInfo << std::endl; */ 
+
+
 }

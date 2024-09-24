@@ -59,7 +59,12 @@ int Server::init(uint16_t port)
 	// Timeout in header
 	FD_ZERO(&masterSet); 
 	FD_SET(socketCom, &masterSet); 
-	FD_SET(listenSocket, &masterSet); 
+	FD_SET(listenSocket, &masterSet);  
+
+	struct timeval timeout; 
+	timeout.tv_sec = 5; 
+	timeout.tv_usec = 0;   
+
 
 
 

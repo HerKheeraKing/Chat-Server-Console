@@ -14,17 +14,12 @@ class Server
 public:
 
 	// Variables
-	struct timeval 
-	{
-		int tv_sec = 5;
-		int tv_msec = 0;
-	};
-
 	int chatCapacity = 0; 
 	int tcpPort = 0;  
 	int serverPort = 0;  
 	char hostName[256];
 	std::string fullHostName = "";
+	std::string addressInfo = ""; 
 
 	// Functions 
 	int init(uint16_t port);

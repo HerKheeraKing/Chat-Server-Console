@@ -20,9 +20,9 @@ public:
 		int tv_msec = 0;
 	};
 
-	uint8_t chatCapacity = 0;
-	uint16_t tcpPort = 0; 
-	uint16_t serverPort = 0; 
+	int chatCapacity = 0; 
+	int tcpPort = 0;  
+	int serverPort = 0;  
 	char hostName[256];
 	std::string fullHostName = "";
 

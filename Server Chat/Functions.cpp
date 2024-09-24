@@ -1,7 +1,7 @@
 #include "Functions.h"
 #include <iostream>
 
- // Prompt user for port num
+ // Prompt user for port num & chat capacity
  // Storing input into string for parsing for invalid characters
  // while spaces & non digits, throw errors & re-prompt
  // try catch to handle exeptions outside of said errors
@@ -78,17 +78,68 @@ void Functions::TCPport()
 void Functions::chatCapacity()  
 {
     std::cout << "Chat Capacity: " << std::endl; 
-    std::cin >> server.chatCapacity; 
-    if (server.chatCapacity < 0 || server.chatCapacity > 4 || std::cin.fail()) 
-    {
-        std::cin.clear();
-        std::cin.ignore(10000, '\n');  
-        std::cout << "\nInvalid chat capacity, please provide a usage betweem '1 - 4' " << std::endl;
-        std::cout << "Chat Capacity: ";
-        std::cin >> server.chatCapacity;
-    }
+    
+    std::string var; 
 
-    std::cout << "You entered a valid chat capacity! " << server.chatCapacity << std::endl;
+    while (true) 
+    {
+        getline(std::cin, var); 
+
+        // Check for spaces 
+        if (var.find(' ') != string::npos) 
+        {
+            std::cout << "\n";
+            std::cout << "Invalid input, chat capacity value cannot contain spaces." << std::endl; 
+            continue;
+        }
+
+        // Check for special characters / non digit 
+
+        bool isValid = true; 
+        for (char c : var) 
+        {
+            if (!std::isdigit(c)) 
+            {
+                std::cout << "\n"; 
+                std::cout << "Invalid input, chat capacity value cannot contain letters or special characters." << std::endl; 
+                isValid = false; 
+                break; 
+            }
+        }
+
+        if (!isValid) 
+        {
+            continue; 
+        }
+
+        // Special internal cases 
+        try
+        {
+            server.chatCapacity = std::stoi(var);  
+            if (server.chatCapacity < 2 || server.chatCapacity > 4) 
+            {
+                std::cout << "\n"; 
+                std::cout << "\nInvalid chat capacity, please provide a number in the range of '2 - 4' " << std::endl; 
+                continue;
+            }
+
+            // Clear console if correct 
+            system("cls"); 
+            std::cout << "\n"; 
+            std::cout << "You entered a valid capacity '" << server.chatCapacity << "', welcome!" << std::endl;     
+            break;
+        }
+        catch (const std::invalid_argument&) 
+        {
+            std::cout << "\n"; 
+            std::cout << "Invalid, please enter a numeric port." << std::endl; 
+        }
+        catch (const std::out_of_range&) 
+        {
+            std::cout << "\n"; 
+            std::cout << "Invalid, please enter a port in range '2 - 4' ." << std::endl; 
+        }
+    }
 }
 
 

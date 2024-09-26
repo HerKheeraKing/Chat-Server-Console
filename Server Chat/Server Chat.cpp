@@ -11,6 +11,8 @@ Functions func;
 
 int main()
 {
+    WSADATA wsaData;
+    WSAStartup(WINSOCK_VERSION, &wsaData);
 
     // Prompt the user for TCP Port number, chat..
     // capacity, and the command character is set to '@'.
@@ -23,9 +25,8 @@ int main()
     // Bind with user port 
     server.init(server.tcpPort); 
     
-    //  TODO: Display host name & IP on the server console upon startup
-    /*std::cout << "Host Name: " << server.fullHostName << std::endl; 
-    std::cout << "Address Info: " << server.addressInfo << std::endl; */ 
+    // Display host name & IP on the server console upon startup
+    //std::cout << "Address Info: " << server.addressInfo << std::endl; */ 
 
-
+   
 }

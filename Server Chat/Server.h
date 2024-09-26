@@ -3,10 +3,11 @@
 #include <winsock2.h>
 #include "stdint.h"
 #include <string>
+#include <vector>
 using namespace std;
 
-//#define _CRT_SECURE_NO_WARNINGS 
-//#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 
 class Server
@@ -16,10 +17,9 @@ public:
 	// Variables
 	int chatCapacity = 0; 
 	int tcpPort = 0;  
-	int serverPort = 0;  
-	char hostName[256];
-	std::string fullHostName = "";
-	std::string addressInfo = ""; 
+	int serverPort = 0; 
+	int numReady = 0; 
+	char hostName[256]; 
 
 	// Functions 
 	int init(uint16_t port);
@@ -34,7 +34,8 @@ public:
 
 	// Socket manager & ready set for usage of sockets from socket manager
 	fd_set masterSet;
-	fd_set readySet; 
+	fd_set readySet;
+	std::vector<SOCKET> clientSocket;  
 
 };
 

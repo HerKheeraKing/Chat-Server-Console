@@ -26,7 +26,6 @@ int main()
     server.init(server.tcpPort); 
     
     // Display host name & IP on the server console upon startup
-    //std::cout << "Address Info: " << server.addressInfo << std::endl; */ 
 
    
 }

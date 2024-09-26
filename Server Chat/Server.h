@@ -1,6 +1,7 @@
 #pragma once
 #include "Error.h"  
 #include <winsock2.h>
+#include <WS2tcpip.h> 
 #include "stdint.h"
 #include <string>
 #include <vector>
@@ -20,7 +21,7 @@ public:
 	int serverPort = 0; 
 	int numReady = 0; 
 	char hostName[256]; 
-
+	
 	// Functions 
 	int init(uint16_t port);
 	int readMessage(char* buffer, int32_t size);

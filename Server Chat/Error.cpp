@@ -29,7 +29,7 @@ void Error::ErrorCode(int error)
         break;
 
     case ADDRESS_ERROR:
-        std::cout << "Server's address not in valid dot notation. Client Error." << std::endl;
+        std::cout << "Could not get address info. Address Error." << std::endl;
         break;
 
     case STARTUP_ERROR:

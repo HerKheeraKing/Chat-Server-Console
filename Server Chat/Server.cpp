@@ -2,6 +2,7 @@
 #include <iostream> 
 using namespace std; 
 
+
 int Server::init(uint16_t port)
 {
 	// Create socket
@@ -36,8 +37,56 @@ int Server::init(uint16_t port)
 		return HOSTNAME_ERROR;  
 	}
 
-	// TODO: collect host IP & display to console
+	// Collect host IP & display to console
+	// Initialize results & hints 
+	// Init hints struct to zero.
+	// Accept both IP 4/6, look for TCP socket.
+	// Return addr error if lookup fails.
+	// Create buffer for addr 4&6
+	// Handle IP4
+	// Handle IP6
+	// Continue if not either
+	// Print IP adddr to console 
+	addrinfo* res; 
+	addrinfo hints; 
+	memset(&hints, 0, sizeof(hints)); 
 
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+
+	if (getaddrinfo(hostName, nullptr, &hints, &res) != 0)   
+	{
+		return ADDRESS_ERROR; 
+	}
+
+	char ip4[INET_ADDRSTRLEN] = "";
+	char ip6[INET6_ADDRSTRLEN] = ""; 
+
+	for (addrinfo* i = res; i != nullptr; i = i->ai_next)   
+	{
+		void* addr;
+
+		if (i->ai_family == AF_INET) // IP4
+		{
+			sockaddr_in* ipv4 = (sockaddr_in*)i->ai_addr;
+			addr = &ipv4->sin_addr;
+			inet_ntop(i->ai_family, addr, ip4, sizeof(ip4));
+		}
+		else if (i->ai_family == AF_INET6) // IP6
+		{
+			sockaddr_in6* ipv6 = (sockaddr_in6*)i->ai_addr;
+			addr = &ipv6->sin6_addr;
+			inet_ntop(i->ai_family, addr, ip6, sizeof(ip6));
+		}
+
+		else continue; 
+	}
+
+	std::cout << "IPV4: " << ip4 << '\n' << "IPV6: " << ip6 << std::endl;
+	std::cout << "-----------------------------------------" << std::endl; 
+	std::cout << '\n'; 
+
+	// Notes: https://cplusplus.com/forum/windows/280069/ 
 
 	// Listening queue for connections 
 	result = listen(listenSocket, 1);

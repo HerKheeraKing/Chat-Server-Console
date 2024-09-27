@@ -13,11 +13,11 @@ int Server::init(uint16_t port)
 	}
 	
 	//// Set up Non blocking
-	//u_long mode = 1; 
-	//if (ioctlsocket(listenSocket, FIONBIO, &mode) == SOCKET_ERROR) 
-	//{
-	//	return SOCKET_ERROR; 
-	//}
+	u_long mode = 1;  
+	if (ioctlsocket(listenSocket, FIONBIO, &mode) == SOCKET_ERROR)  
+	{
+		return SOCKET_ERROR;  
+	}
 
 	// Bind Socket to port
 	sockaddr_in sAdress;

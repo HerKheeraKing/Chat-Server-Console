@@ -96,24 +96,10 @@ int Server::init(uint16_t port)
 	// Notes: https://cplusplus.com/forum/windows/280069/ 
 
 	// Listening queue for connections 
-	result = listen(listenSocket, 1);
+	result = listen(listenSocket, 1); 
 	if (result == SOCKET_ERROR)
 	{
 		return SETUP_ERROR;
-	}
-
-	newClientSocket = accept(listenSocket, NULL, NULL);  
-	if (newClientSocket == INVALID_SOCKET)  
-	{
-		// Check for error & already shutdown 
-		if (WSAGetLastError() == WSAESHUTDOWN) 
-		{
-			return SHUTDOWN; 
-		}
-		else
-		{
-			return CONNECT_ERROR; 
-		}
 	}
 
 	// Master Set set-up
@@ -124,28 +110,21 @@ int Server::init(uint16_t port)
 
 	while (true) 
 	{
-		struct timeval timeout { 5, 0 }; 
-		timeout.tv_sec = 5; 
+		struct timeval timeout { 3, 0 };  
+		timeout.tv_sec = 3;  
 		timeout.tv_usec = 0; 
 
 		readySet = masterSet;
-		numReady = select(0, &readySet, NULL, NULL, &timeout);
+		numReady = select(0, &readySet, NULL, NULL, &timeout);  
 
 		if (numReady == SOCKET_ERROR)
 		{
 			return READY_ERROR;  
-		}
-
-		std::cout << "Checking if listenSocket is ready: " 
-			<< (FD_ISSET(listenSocket, &readySet) ? "Yes" : "No") << std::endl; 
-
-		std::cout << "Num of sockets ready: " << numReady << std::endl;  
+		} 
 
 		// If listening socket is ready
 		if (FD_ISSET(listenSocket, &readySet)) 
 		{
-			std::cout << "Listening socket is ready, accepting connection..." << std::endl;  
-
 			// Accept new connection 
 		    newClientSocket = accept(listenSocket, NULL, NULL);  
 
@@ -186,12 +165,14 @@ int Server::init(uint16_t port)
 			// Add to master set
 			FD_SET(newClientSocket, &masterSet); 
 			clientSocket.push_back(newClientSocket); 
-			std::cout << "Completed accepting " << std::endl;  
+			std::cout << "User " << users << " joined!" << std::endl;     
+			// TODO: change to username instead 
 
 			// Welcome message 
 			const char* mess = "Welcome to your server, use '@' for commands. ";
 			size_t length = strlen(mess);
-			sendMessage((char*)mess, static_cast<int32_t>(length));  
+			sendMessage((char*)mess, static_cast<int32_t>(length)); 
+			// TODO: send message to gui of which user joined
 
 		//// Process each ready client 
 		//for (int i = 0; i < chatCapacity; i++)

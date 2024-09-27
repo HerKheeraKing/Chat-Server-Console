@@ -20,18 +20,18 @@ public:
 	int tcpPort = 0;  
 	int serverPort = 0; 
 	int numReady = 0; 
-	char hostName[256]; 
+	char hostName[256] = "";
 	
 	// Functions 
 	int init(uint16_t port);
-	int readMessage(char* buffer, int32_t size);
+	int readMessage(char* buffer, int32_t size); 
 	int sendMessage(char* data, int32_t length);
 	int alanticChase(char* data, int32_t length);
 	void stop();
 
 	// Sockets 
 	SOCKET listenSocket;
-	SOCKET socketCom;
+	SOCKET newClientSocket; 
 
 	// Socket manager & ready set for usage of sockets from socket manager
 	fd_set masterSet;

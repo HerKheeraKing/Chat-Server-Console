@@ -11,8 +11,8 @@ Functions func;
 
 int main()
 {
-    WSADATA wsaData;
-    WSAStartup(WINSOCK_VERSION, &wsaData);
+    WSADATA wsaData; 
+    WSAStartup(WINSOCK_VERSION, &wsaData); 
 
     // Prompt the user for TCP Port number, chat..
     // capacity, and the command character is set to '@'.

@@ -12,6 +12,13 @@ int Server::init(uint16_t port)
 		return SETUP_ERROR;
 	}
 	
+	//// Set up Non blocking
+	//u_long mode = 1; 
+	//if (ioctlsocket(listenSocket, FIONBIO, &mode) == SOCKET_ERROR) 
+	//{
+	//	return SOCKET_ERROR; 
+	//}
+
 	// Bind Socket to port
 	sockaddr_in sAdress;
 	sAdress.sin_family = AF_INET;
@@ -82,7 +89,7 @@ int Server::init(uint16_t port)
 		else continue; 
 	}
 
-	std::cout << "IPV4: " << ip4 << '\n' << "IPV6: " << ip6 << std::endl;
+	std::cout << "IPv4: " << ip4 << '\n' << "IPv6: " << ip6 << std::endl;
 	std::cout << "-----------------------------------------" << std::endl; 
 	std::cout << '\n'; 
 
@@ -95,65 +102,107 @@ int Server::init(uint16_t port)
 		return SETUP_ERROR;
 	}
 
-	socketCom = accept(listenSocket, NULL, NULL);
-	if (socketCom == INVALID_SOCKET)
+	newClientSocket = accept(listenSocket, NULL, NULL);  
+	if (newClientSocket == INVALID_SOCKET)  
 	{
 		// Check for error & already shutdown 
-		if (WSAGetLastError() == WSAESHUTDOWN)
+		if (WSAGetLastError() == WSAESHUTDOWN) 
 		{
-			return SHUTDOWN;
+			return SHUTDOWN; 
 		}
 		else
 		{
-			return CONNECT_ERROR;
+			return CONNECT_ERROR; 
 		}
 	}
 
 	// Master Set set-up
 	// Timeout in header
 	FD_ZERO(&masterSet); 
-	FD_SET(socketCom, &masterSet); 
-	FD_SET(listenSocket, &masterSet);  
+	FD_SET(listenSocket, &masterSet); 
+	int users = 0; 
 
-	struct timeval timeout { 5, 0 }; 
-	timeout.tv_sec = 5; 
-	timeout.tv_usec = 0;   
-
-	//while (true) 
+	while (true) 
 	{
-	//	readySet = masterSet;
-	//	numReady = select(0, &readySet, NULL, NULL, &timeout);
+		struct timeval timeout { 5, 0 }; 
+		timeout.tv_sec = 5; 
+		timeout.tv_usec = 0; 
 
-	//	// If listening socket is ready
-	//	if (FD_ISSET(listenSocket, &readySet)) 
-	//	{
-	//		// Accept new connection 
-	//	    socketCom = accept(listenSocket, NULL, NULL); 
-	//		if (socketCom == INVALID_SOCKET) 
-	//		{
-	//			// Check for error & already shutdown 
-	//			if (WSAGetLastError() == WSAESHUTDOWN) 
-	//			{
-	//				return SHUTDOWN; 
-	//			}
-	//			else
-	//			{
-	//				return CONNECT_ERROR; 
-	//			}
-	//	    }
-	//		// Add to master set
-	//		FD_SET(socketCom, &masterSet);  
+		readySet = masterSet;
+		numReady = select(0, &readySet, NULL, NULL, &timeout);
 
-	//	// Process each ready client 
-	//	for (int i = 0; i < chatCapacity; i++)
-	//	{
-	//		if (FD_ISSET(clientSocket[i], &readySet))  
-	//		{
-	//			// Process client 
-	//			 
-	//			
-	//		}
-	//	}
+		if (numReady == SOCKET_ERROR)
+		{
+			return READY_ERROR;  
+		}
+
+		std::cout << "Checking if listenSocket is ready: " 
+			<< (FD_ISSET(listenSocket, &readySet) ? "Yes" : "No") << std::endl; 
+
+		std::cout << "Num of sockets ready: " << numReady << std::endl;  
+
+		// If listening socket is ready
+		if (FD_ISSET(listenSocket, &readySet)) 
+		{
+			std::cout << "Listening socket is ready, accepting connection..." << std::endl;  
+
+			// Accept new connection 
+		    newClientSocket = accept(listenSocket, NULL, NULL);  
+
+			if (users >= chatCapacity) 
+			{
+				std::cout << "Chat at full capacity." << std::endl; 
+
+				// At capacity message to GUI
+				const char* mess = "Chat is currently full. Please try again later. "; 
+				size_t length = strlen(mess); 
+				sendMessage((char*)mess, static_cast<int32_t>(length)); 
+
+				closesocket(newClientSocket); 
+				users--; 
+				continue; 
+			}
+
+			if (newClientSocket == INVALID_SOCKET)
+			{
+				// Check for error & already shutdown
+				if (WSAGetLastError() == WSAEWOULDBLOCK) 
+				{
+					continue;
+				}
+				else if (WSAGetLastError() == WSAESHUTDOWN) 
+				{
+					return SHUTDOWN; 
+				}
+				else
+				{
+					return CONNECT_ERROR; 
+				}
+			}
+
+			// Handle chat capacity 
+			users++; 
+			
+			// Add to master set
+			FD_SET(newClientSocket, &masterSet); 
+			clientSocket.push_back(newClientSocket); 
+			std::cout << "Completed accepting " << std::endl;  
+
+			// Welcome message 
+			const char* mess = "Welcome to your server, use '@' for commands. ";
+			size_t length = strlen(mess);
+			sendMessage((char*)mess, static_cast<int32_t>(length));  
+
+		//// Process each ready client 
+		//for (int i = 0; i < chatCapacity; i++)
+		//{
+		//	if (FD_ISSET(clientSocket[i], &readySet))  
+		//	{
+		//		// Process client 
+		//		 
+		//		
+		//	}
+		}
 	}
 
 
@@ -161,13 +210,13 @@ int Server::init(uint16_t port)
 }
 
 
-int Server::readMessage(char* buffer, int32_t size)
+int Server::readMessage(char* buffer, int32_t size)     
 {
 	int total = 0;
 
 	// Get length of data
 	uint8_t length = 0;
-	int messLength = recv(socketCom, (char*)&length, 1, 0);
+	int messLength = recv(newClientSocket, (char*)&length, 1, 0);
 
 
 	if (messLength > size)
@@ -177,7 +226,7 @@ int Server::readMessage(char* buffer, int32_t size)
 
 	do
 	{
-		messLength = recv(socketCom, buffer + total, length - total, 0);
+		messLength = recv(newClientSocket, buffer + total, length - total, 0);
 
 		if (messLength < 1)
 		{
@@ -206,7 +255,7 @@ int Server::alanticChase(char* data, int32_t length)
 
 	while (bytesSent < length)
 	{
-		result = send(socketCom, (const char*)data + bytesSent, length - bytesSent, 0);
+		result = send(newClientSocket, (const char*)data + bytesSent, length - bytesSent, 0);
 
 		if (result < 1)
 		{
@@ -241,7 +290,7 @@ int Server::sendMessage(char* data, int32_t length)
 void Server::stop()
 {
 	shutdown(listenSocket, SD_BOTH); 
-	shutdown(socketCom, SD_BOTH);
+	shutdown(newClientSocket, SD_BOTH);
 	closesocket(listenSocket);
-	closesocket(socketCom);
+	closesocket(newClientSocket);
 }

@@ -108,106 +108,148 @@ int Server::init(uint16_t port)
 	FD_SET(listenSocket, &masterSet); 
 	int users = 0; 
 
-	while (true) 
+	while (true)
 	{
-		struct timeval timeout { 3, 0 };  
-		timeout.tv_sec = 3;  
-		timeout.tv_usec = 0; 
+		struct timeval timeout { 3, 0 };
+		timeout.tv_sec = 3;
+		timeout.tv_usec = 0;
 
 		readySet = masterSet;
-		numReady = select(0, &readySet, NULL, NULL, &timeout);  
+		numReady = select(0, &readySet, NULL, NULL, &timeout);
 
 		if (numReady == SOCKET_ERROR)
 		{
-			return READY_ERROR;  
-		} 
+			return READY_ERROR;
+		}
 
 		// If listening socket is ready
-		if (FD_ISSET(listenSocket, &readySet)) 
+		if (FD_ISSET(listenSocket, &readySet))
 		{
 			// Accept new connection 
-		    newClientSocket = accept(listenSocket, NULL, NULL);  
+			newClientSocket = accept(listenSocket, NULL, NULL);
 
 			if (users >= chatCapacity) 
 			{
-				std::cout << "Chat at full capacity." << std::endl; 
+				std::cout << "Chat at full capacity." << std::endl;
 
 				// At capacity message to GUI
-				const char* mess = "Chat is currently full. Please try again later. "; 
-				size_t length = strlen(mess); 
-				sendMessage((char*)mess, static_cast<int32_t>(length)); 
+				const char* mess = "Chat is currently full. Please try again later. ";
+				size_t length = strlen(mess);
+				sendMessage(newClientSocket, (char*)mess, static_cast<int32_t>(length)); 
 
-				closesocket(newClientSocket); 
-				users--; 
-				continue; 
+				closesocket(newClientSocket);
+				continue;
 			}
 
 			if (newClientSocket == INVALID_SOCKET)
 			{
 				// Check for error & already shutdown
-				if (WSAGetLastError() == WSAEWOULDBLOCK) 
+				if (WSAGetLastError() == WSAEWOULDBLOCK)
 				{
 					continue;
 				}
-				else if (WSAGetLastError() == WSAESHUTDOWN) 
+				else if (WSAGetLastError() == WSAESHUTDOWN)
 				{
-					return SHUTDOWN; 
+					return SHUTDOWN;
 				}
 				else
 				{
-					return CONNECT_ERROR; 
+					return CONNECT_ERROR;
 				}
 			}
 
 			// Handle chat capacity 
-			users++; 
-			
+			users++;
+
 			// Add to master set
-			FD_SET(newClientSocket, &masterSet); 
-			clientSocket.push_back(newClientSocket); 
-			std::cout << "User " << users << " joined!" << std::endl;     
+			FD_SET(newClientSocket, &masterSet);
+			FD_SET(newClientSocket, &readySet); 
+			clientSocket.push_back(newClientSocket);
+			std::cout << "User " << users << " joined!" << std::endl;
 			// TODO: change to username instead 
 
 			// Welcome message 
-			const char* mess = "Welcome to your server, use '@' for commands. ";
-			size_t length = strlen(mess);
-			sendMessage((char*)mess, static_cast<int32_t>(length)); 
-			// TODO: send message to gui of which user joined
+			const char* welcomeMess = "Welcome to your server, use '@' for commands. ";
+			size_t length = strlen(welcomeMess);
+			sendMessage(newClientSocket, (char*)welcomeMess, static_cast<int32_t>(length));   
 
-		//// Process each ready client 
-		//for (int i = 0; i < chatCapacity; i++)
-		//{
-		//	if (FD_ISSET(clientSocket[i], &readySet))  
-		//	{
-		//		// Process client 
-		//		 
-		//		
-		//	}
+
+		// Process each ready client 
+			for (int i = 0; i < clientSocket.size(); i++)      
+			{
+				if (FD_ISSET(clientSocket[i], &readySet))        
+				{ 
+					// Process client 
+
+					// Buffer 
+					char messageBuffer[256] = "";
+
+					// Input 
+					int input = readMessage(clientSocket[i], messageBuffer, sizeof(messageBuffer));    
+
+					// If reading message 
+					if (input == 1 && strlen(messageBuffer) <= 0)
+					{
+						// User is connected && reset input
+						input = 0; 
+					}
+					if (input > 1 && strlen(messageBuffer) > 0)      
+					{
+						for (int j = 0; j < clientSocket.size(); j++) 
+						{
+							if (i != j) 
+							{
+								 sendMessage(clientSocket[j], messageBuffer, strlen(messageBuffer));
+							}
+						}
+					}
+	
+					// // If disconnecting
+					//else if (input == 0)     
+					//{
+					//	std::cout << "Input disconnect: " << input << ", Message: '" << messageBuffer << "'" << std::endl;
+ 
+					//	FD_CLR(clientSocket[i], &masterSet);    
+					//	clientSocket.erase(clientSocket.begin() + i); 
+					//	closesocket(clientSocket[i]);   
+					//	users--;    
+					//	std::cout << "User " << users << " has disconnected!" << std::endl;    
+					//}
+
+					 //If using command 
+
+
+				}
+			}
 		}
 	}
 
 
-	return SUCCESS;
+   return SUCCESS; 
 }
 
-
-int Server::readMessage(char* buffer, int32_t size)     
+ 
+int Server::readMessage(int clientSocket, char* buffer, int32_t size)         
 {
 	int total = 0;
 
 	// Get length of data
 	uint8_t length = 0;
-	int messLength = recv(newClientSocket, (char*)&length, 1, 0);
+	int messLength = recv(clientSocket, (char*)&length, 1, 0); 
 
+	if (messLength < 1 || length == 0) 
+	{
+		return SHUTDOWN;
+	}
 
-	if (messLength > size)
+	if (length > size) 
 	{
 		return PARAMETER_ERROR;
 	}
 
 	do
 	{
-		messLength = recv(newClientSocket, buffer + total, length - total, 0);
+		messLength = recv(clientSocket, buffer + total, length - total, 0);
 
 		if (messLength < 1)
 		{
@@ -225,18 +267,20 @@ int Server::readMessage(char* buffer, int32_t size)
 
 	} while (total < length);
 
+	buffer[total] = '\0'; 
+
 	return SUCCESS;
 }
 
 
-int Server::alanticChase(char* data, int32_t length)
+int Server::alanticChase(int clientSocket, char* data, int32_t length) 
 {
 	int bytesSent = 0;
 	int result;
 
 	while (bytesSent < length)
 	{
-		result = send(newClientSocket, (const char*)data + bytesSent, length - bytesSent, 0);
+		result = send(clientSocket, (const char*)data + bytesSent, length - bytesSent, 0);  
 
 		if (result < 1)
 		{
@@ -249,29 +293,30 @@ int Server::alanticChase(char* data, int32_t length)
 		}
 
 		bytesSent += result;
+		std::cout << "Sent " << result << " bytes to client " << clientSocket << std::endl; 
 	}
 
 	return bytesSent;
 }
 
 
-int Server::sendMessage(char* data, int32_t length)
+int Server::sendMessage(int clientSocket, char* data, int32_t length) 
 {
-	if (length < 0 || length > 255)
+	if (length < 0 || length > 255) 
 	{
 		return PARAMETER_ERROR;
 	}
 
-	alanticChase((char*)&length, 1);
-	alanticChase(data, length);
-
+	alanticChase(clientSocket, (char*)&length, 1);
+	alanticChase(clientSocket, data, length);
+	  
 	return SUCCESS;
 }
 
 void Server::stop()
 {
-	shutdown(listenSocket, SD_BOTH); 
-	shutdown(newClientSocket, SD_BOTH);
+	shutdown(listenSocket, SD_BOTH);  
+	shutdown(newClientSocket, SD_BOTH); 
 	closesocket(listenSocket);
 	closesocket(newClientSocket);
 }

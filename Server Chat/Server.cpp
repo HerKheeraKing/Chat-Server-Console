@@ -102,6 +102,38 @@ int Server::init(uint16_t port)
 		return SETUP_ERROR;
 	}
 
+	// @help command 
+	std::string userInput = "";  
+
+	while (true) 
+	{
+		std::getline(std::cin, userInput);   
+
+		if (userInput == "@help")  
+		{
+			Command::setCommandCase(userInput);    
+		}
+		if (userInput == "@exit") 
+		{
+			system("cls"); 
+			break; 
+		}
+	}
+
+	//while (true) {
+	//	// Check for command input
+	//	if (std::cin.peek() != '\n') { // Non-blocking check 
+	//		std::string userInput; 
+	//		std::getline(std::cin, userInput); 
+	//		if (userInput == "@help") { 
+	//			Command::setCommandCase(userInput); 
+	//		}
+	//		else if (userInput == "@exit") { 
+	//			system("cls"); 
+	//			break; // Exit command handling loop 
+	//		}
+	//	}
+
 	// Master Set set-up
 	// Timeout in header
 	FD_ZERO(&masterSet); 

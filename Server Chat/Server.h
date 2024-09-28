@@ -5,6 +5,7 @@
 #include "stdint.h"
 #include <string>
 #include <vector>
+#include "Command.h" 
 using namespace std;
 
 #define _CRT_SECURE_NO_WARNINGS 

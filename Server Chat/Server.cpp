@@ -96,29 +96,30 @@ int Server::init(uint16_t port)
 	// Notes: https://cplusplus.com/forum/windows/280069/ 
 
 	// Listening queue for connections 
-	result = listen(listenSocket, 1); 
+	// Multiple connections 
+	result = listen(listenSocket, SOMAXCONN);  
 	if (result == SOCKET_ERROR)
 	{
 		return SETUP_ERROR;
 	}
 
-	// @help command 
-	std::string userInput = "";  
+	//// @help command 
+	//std::string userInput = "";  
 
-	while (true) 
-	{
-		std::getline(std::cin, userInput);   
+	//while (true) 
+	//{
+	//	std::getline(std::cin, userInput);   
 
-		if (userInput == "@help")  
-		{
-			Command::setCommandCase(userInput);    
-		}
-		if (userInput == "@exit") 
-		{
-			system("cls"); 
-			break; 
-		}
-	}
+	//	if (userInput == "@help")  
+	//	{
+	//		Command::setCommandCase(userInput);    
+	//	}
+	//	if (userInput == "@exit") 
+	//	{
+	//		system("cls"); 
+	//		break; 
+	//	}
+	//}
 
 	//while (true) {
 	//	// Check for command input
@@ -137,7 +138,7 @@ int Server::init(uint16_t port)
 	// Master Set set-up
 	// Timeout in header
 	FD_ZERO(&masterSet); 
-	FD_SET(listenSocket, &masterSet); 
+	FD_SET(listenSocket, &masterSet);  
 	int users = 0; 
 
 	while (true)
@@ -147,110 +148,101 @@ int Server::init(uint16_t port)
 		timeout.tv_usec = 0;
 
 		readySet = masterSet;
-		numReady = select(0, &readySet, NULL, NULL, &timeout);
+		numReady = select(0, &readySet, nullptr, nullptr, &timeout);
 
 		if (numReady == SOCKET_ERROR)
 		{
 			return READY_ERROR;
 		}
-
-		// If listening socket is ready
-		if (FD_ISSET(listenSocket, &readySet))
+		 
+		for (int i = 0; i < numReady; i++)
 		{
-			// Accept new connection 
-			newClientSocket = accept(listenSocket, NULL, NULL);
-
-			if (users >= chatCapacity) 
+			// Set ready socket[i] client socket 
+			clientSocket = readySet.fd_array[i];  
+			if (FD_ISSET(listenSocket, &readySet)) 
 			{
-				std::cout << "Chat at full capacity." << std::endl;
+				
+				// Accept connection 
+		        newClientSocket = accept(listenSocket, nullptr, nullptr);  
+				users++; 
 
-				// At capacity message to GUI
-				const char* mess = "Chat is currently full. Please try again later. ";
-				size_t length = strlen(mess);
-				sendMessage(newClientSocket, (char*)mess, static_cast<int32_t>(length)); 
-
-				closesocket(newClientSocket);
-				continue;
-			}
-
-			if (newClientSocket == INVALID_SOCKET)
-			{
-				// Check for error & already shutdown
-				if (WSAGetLastError() == WSAEWOULDBLOCK)
+				// Checking for chat capacity 
+				if (users >= chatCapacity)   
 				{
-					continue;
+					std::cout << "Chat at full capacity. Please try again later." << std::endl;      
+
+					// At capacity message to GUI & server
+					// Handle new user coming in
+					const char* mess = "Chat is currently full. Please try again later. ";  
+					size_t length = strlen(mess);  
+					send(newClientSocket, (char*)mess, static_cast<int32_t>(length), 0);  
+					closesocket(newClientSocket);  
+					users--; 
+					continue;  
 				}
-				else if (WSAGetLastError() == WSAESHUTDOWN)
-				{
-					return SHUTDOWN;
-				}
-				else
-				{
-					return CONNECT_ERROR;
-				}
-			}
 
-			// Handle chat capacity 
-			users++;
-
-			// Add to master set
-			FD_SET(newClientSocket, &masterSet);
-			FD_SET(newClientSocket, &readySet); 
-			clientSocket.push_back(newClientSocket);
-			std::cout << "User " << users << " joined!" << std::endl;
-			// TODO: change to username instead 
-
-			// Welcome message 
-			const char* welcomeMess = "Welcome to your server, use '@' for commands. ";
-			size_t length = strlen(welcomeMess);
-			sendMessage(newClientSocket, (char*)welcomeMess, static_cast<int32_t>(length));   
-
-
-		// Process each ready client 
-			for (int i = 0; i < clientSocket.size(); i++)      
-			{
-				if (FD_ISSET(clientSocket[i], &readySet))        
-				{ 
-					// Process client 
-
-					// Buffer 
-					char messageBuffer[256] = "";
-
-					// Input 
-					int input = readMessage(clientSocket[i], messageBuffer, sizeof(messageBuffer));    
-
-					// If reading message 
-					if (input == 1 && strlen(messageBuffer) <= 0)
-					{
-						// User is connected && reset input
-						input = 0; 
-					}
-					if (input > 1 && strlen(messageBuffer) > 0)      
-					{
-						for (int j = 0; j < clientSocket.size(); j++) 
+				// Error checking new client socket 
+				if (newClientSocket == INVALID_SOCKET) 
 						{
-							if (i != j) 
+							// Check for error & already shutdown
+							if (WSAGetLastError() == WSAEWOULDBLOCK) 
 							{
-								 sendMessage(clientSocket[j], messageBuffer, strlen(messageBuffer));
+								continue;
+							}
+							else if (WSAGetLastError() == WSAESHUTDOWN) 
+							{
+								return SHUTDOWN; 
+							}
+							else
+							{
+								return CONNECT_ERROR; 
 							}
 						}
-					}
-	
-					// // If disconnecting
-					//else if (input == 0)     
-					//{
-					//	std::cout << "Input disconnect: " << input << ", Message: '" << messageBuffer << "'" << std::endl;
- 
-					//	FD_CLR(clientSocket[i], &masterSet);    
-					//	clientSocket.erase(clientSocket.begin() + i); 
-					//	closesocket(clientSocket[i]);   
-					//	users--;    
-					//	std::cout << "User " << users << " has disconnected!" << std::endl;    
-					//}
 
-					 //If using command 
+				// + new connection to master
+				FD_SET(newClientSocket, &masterSet);  
 
+				// Welcome message
+			const char* welcomeMess = "Welcome to your server, use '@' for commands & '@help' for list of commands.\r\n ";   
+			size_t length = strlen(welcomeMess); 
+			sendMessage(newClientSocket, (char*)welcomeMess, static_cast<int32_t>(length)); 
+				
+			}
+			else 
+			{
+				// Buffer 
+		    	char messageBuffer[4096] = ""; 
+				ZeroMemory(messageBuffer, 4096); 
 
+				// Accept new message 
+				// Input 
+				int input = recv(clientSocket, messageBuffer, 4096, 0);    
+				if (input <= 0) 
+				{
+					// Disconnect 
+					closesocket(clientSocket); 
+					FD_CLR(clientSocket, &masterSet);  
+					users--; 
+				}
+				else 
+				{
+				   // Send message to clients 
+					for (int i = 0; i < masterSet.fd_count; i++) 
+					{
+						// Sock to handle message sending 
+						SOCKET sendSock = masterSet.fd_array[i];
+						if (sendSock != listenSocket && sendSock != clientSocket)  
+						{
+							// Create object to build message 
+							// Output user format
+							// Convert from object to string
+							ostringstream ss;
+							ss << "User " << clientSocket << ": " << messageBuffer << "\r\n"; 
+							std::string strOut = ss.str();  
+
+							send(sendSock, strOut.c_str(), strOut.size() + 1, 0);  
+						}
+					}			
 				}
 			}
 		}
@@ -261,22 +253,22 @@ int Server::init(uint16_t port)
 }
 
  
-int Server::readMessage(int clientSocket, char* buffer, int32_t size)         
+int Server::readMessage(int clientSocket, char* buffer, int32_t size)           
 {
 	int total = 0;
 
 	// Get length of data
 	uint8_t length = 0;
-	int messLength = recv(clientSocket, (char*)&length, 1, 0); 
+	int messLength = recv(clientSocket, (char*)&length, 1, 0);  
 
 	if (messLength < 1 || length == 0) 
 	{
-		return SHUTDOWN;
+		return SHUTDOWN; 
 	}
 
 	if (length > size) 
 	{
-		return PARAMETER_ERROR;
+		return PARAMETER_ERROR; 
 	}
 
 	do
@@ -325,7 +317,6 @@ int Server::alanticChase(int clientSocket, char* data, int32_t length)
 		}
 
 		bytesSent += result;
-		std::cout << "Sent " << result << " bytes to client " << clientSocket << std::endl; 
 	}
 
 	return bytesSent;

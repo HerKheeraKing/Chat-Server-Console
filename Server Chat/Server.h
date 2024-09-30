@@ -5,6 +5,7 @@
 #include "stdint.h"
 #include <string>
 #include <vector>
+#include <sstream>
 #include "Command.h" 
 using namespace std;
 
@@ -33,11 +34,12 @@ public:
 	// Sockets 
 	SOCKET listenSocket;
 	SOCKET newClientSocket; 
+	SOCKET clientSocket;    
 
 	// Socket manager & ready set for usage of sockets from socket manager
 	fd_set masterSet;
 	fd_set readySet;
-	std::vector<SOCKET> clientSocket;  
+	   
 
 };
 

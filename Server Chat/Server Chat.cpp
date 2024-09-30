@@ -17,7 +17,7 @@ int main()
 
     // Prompt the user for TCP Port number, chat..
     // capacity, and the command character is set to '@'.
-    std::cout << "Welcome to the Chat Server, please provide the following information to get started! Use '@' for commands & '@help' for list of commands.\n\n" << std::endl;
+    std::cout << "Welcome to the Chat Server, please provide the following information to get started!\n\n" << std::endl;
 
     func.TCPport(); 
     std::cout << "\n\n"; 

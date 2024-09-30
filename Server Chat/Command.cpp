@@ -4,7 +4,7 @@
 void Command::setCommandCase(std::string& commandCase)    
 {
 
-	if (commandCase == "@help")  
+	if (commandCase == "@help")   
 	{
 		// Clear Console 
 		system("cls"); 
@@ -30,11 +30,20 @@ void Command::setCommandCase(std::string& commandCase)
 		std::cout << "@send username message – overrides messages being sent to all users, user with command can send to desired users. \nParameters: message & username of desired receiver" << std::endl; 
 		std::cout << '\n';
 
-		std::cout << "@help - provides active clients with the list of available commands on the server. \nParameters: none" << std::endl; 
+		std::cout << "@help - provides active clients with the list of available commands on the server. \nParameters: none" << std::endl;  
 	}
 	
 	
-		
+	
+
+
+
+
+
+
+
+
+
 }
 
 

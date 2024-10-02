@@ -6,6 +6,10 @@
  // while spaces & non digits, throw errors & re-prompt
  // try catch to handle exeptions outside of said errors
  // letters, special char, spaces , chat capacity  
+
+// Instances
+extern Server server; 
+
 void Functions::TCPport()
 {
     std::cout << "TCP Port Number: " << std::endl;
@@ -31,7 +35,7 @@ void Functions::TCPport()
         {
             if (!std::isdigit(c))   
             {
-                std::cout << "\n";
+                std::cout << "\n"; 
                 std::cout << "Invalid input, TCP port number cannot contain letters or special characters." << std::endl;  
                 isValid = false; 
                 break;
@@ -139,6 +143,23 @@ void Functions::chatCapacity()
             std::cout << "\n"; 
             std::cout << "Invalid, please enter a port in range '2 - 4' ." << std::endl; 
         }
+    }
+}
+
+void Functions::saveChat()  
+{
+    buffer.push_back("Welcome to your server, use '@' for commands & '@help' for list of commands.\r\n"); 
+    buffer.push_back(""); 
+    buffer.push_back("...");  
+}
+
+void Functions::restoreChat(std::string input) 
+{
+    
+
+    for (auto& a : buffer)    
+    {
+        std::cout << a << std::endl;     
     }
 }
 

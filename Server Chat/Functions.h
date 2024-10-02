@@ -2,18 +2,27 @@
 #include "Server.h"
 
 
-// Instances
-extern Server server;
-
+//// Instances
+//extern Server server; 
+ 
 
 class Functions
 {
 public:
 
-	static void TCPport();
+	// Memebers
+	std::vector<std::string> buffer;   
+
+	void TCPport();
 	
-	static void chatCapacity();  
+	void chatCapacity();  
+
+	void saveChat(); 
 	
+	void restoreChat(std::string input); 
+
+
 
 };
+
 

@@ -7,14 +7,19 @@
 #include <vector>
 #include <sstream>
 #include "Command.h" 
+#include "Functions.h"      
 using namespace std;
+
+
 
 #define _CRT_SECURE_NO_WARNINGS 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 
-class Server
+
+class Server 
 {
+
 public:
 
 	// Variables
@@ -27,10 +32,10 @@ public:
 	// Functions 
 	int init(uint16_t port);
 	int readMessage(int clientSocket, char* buffer, int32_t size);
-	int sendMessage(int clientSocket, char* data, int32_t length);
-	int alanticChase(int clientSocket, char* data, int32_t length);
+	int sendMessage(int clientSocket, const char* data, int32_t length);
+	int alanticChase(int clientSocket, const char* data, int32_t length);
 	void stop();
-
+	 
 	// Sockets 
 	SOCKET listenSocket;
 	SOCKET newClientSocket; 
@@ -42,4 +47,5 @@ public:
 	   
 
 };
+
 

@@ -13,7 +13,7 @@ public:
 
 
 	// Functions 
-	static void setCommandCase(std::string& commandCase);     
+	static std::string setCommandCase(std::string& commandCase);      
 
 
 

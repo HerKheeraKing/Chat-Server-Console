@@ -2,6 +2,8 @@
 #include <iostream> 
 using namespace std; 
 
+   
+extern Functions func;    
 
 int Server::init(uint16_t port)
 {
@@ -103,37 +105,6 @@ int Server::init(uint16_t port)
 		return SETUP_ERROR;
 	}
 
-	//// @help command 
-	//std::string userInput = "";  
-
-	//while (true) 
-	//{
-	//	std::getline(std::cin, userInput);   
-
-	//	if (userInput == "@help")  
-	//	{
-	//		Command::setCommandCase(userInput);    
-	//	}
-	//	if (userInput == "@exit") 
-	//	{
-	//		system("cls"); 
-	//		break; 
-	//	}
-	//}
-
-	//while (true) {
-	//	// Check for command input
-	//	if (std::cin.peek() != '\n') { // Non-blocking check 
-	//		std::string userInput; 
-	//		std::getline(std::cin, userInput); 
-	//		if (userInput == "@help") { 
-	//			Command::setCommandCase(userInput); 
-	//		}
-	//		else if (userInput == "@exit") { 
-	//			system("cls"); 
-	//			break; // Exit command handling loop 
-	//		}
-	//	}
 
 	// Master Set set-up
 	// Timeout in header
@@ -205,7 +176,7 @@ int Server::init(uint16_t port)
 				// Welcome message
 			const char* welcomeMess = "Welcome to your server, use '@' for commands & '@help' for list of commands.\r\n ";   
 			size_t length = strlen(welcomeMess); 
-			sendMessage(newClientSocket, (char*)welcomeMess, static_cast<int32_t>(length)); 
+			sendMessage(newClientSocket, welcomeMess, static_cast<int32_t>(length));  
 				
 			}
 			else 
@@ -226,23 +197,42 @@ int Server::init(uint16_t port)
 				}
 				else 
 				{
-				   // Send message to clients 
-					for (int i = 0; i < masterSet.fd_count; i++) 
-					{
-						// Sock to handle message sending 
-						SOCKET sendSock = masterSet.fd_array[i];
-						if (sendSock != listenSocket && sendSock != clientSocket)  
-						{
-							// Create object to build message 
-							// Output user format
-							// Convert from object to string
-							ostringstream ss;
-							ss << "User " << clientSocket << ": " << messageBuffer << "\r\n"; 
-							std::string strOut = ss.str();  
+					// If user uses command 
+					std::string userInput(messageBuffer);  
+					userInput.erase(userInput.size() - 2); 
 
-							send(sendSock, strOut.c_str(), strOut.size() + 1, 0);  
+					if (userInput == "@help") 
+					{
+					  std::string sendMsgTxt = Command::setCommandCase(userInput); 
+			
+					  sendMessage(clientSocket, sendMsgTxt.c_str(), static_cast<int32_t > (strlen(sendMsgTxt.c_str()))); 
+					}
+					else if (userInput == "@exit")
+					{
+						std::string text = Command::setCommandCase(userInput);  
+
+						func.restoreChat(text);   
+					}
+					else
+					{ 
+						// Send message to clients 
+						for (int i = 0; i < masterSet.fd_count; i++)
+						{
+							// Sock to handle message sending 
+							SOCKET sendSock = masterSet.fd_array[i];
+							if (sendSock != listenSocket && sendSock != clientSocket)
+							{
+								// Create object to build message 
+								// Output user format
+								// Convert from object to string
+								ostringstream ss;
+								ss << "User " << clientSocket << ": " << messageBuffer << "\r\n";
+								std::string strOut = ss.str();
+
+								send(sendSock, strOut.c_str(), strOut.size() + 1, 0);
+							}
 						}
-					}			
+					}
 				}
 			}
 		}
@@ -297,14 +287,14 @@ int Server::readMessage(int clientSocket, char* buffer, int32_t size)
 }
 
 
-int Server::alanticChase(int clientSocket, char* data, int32_t length) 
+int Server::alanticChase(int clientSocket, const char* data, int32_t length) 
 {
 	int bytesSent = 0;
 	int result;
 
 	while (bytesSent < length)
 	{
-		result = send(clientSocket, (const char*)data + bytesSent, length - bytesSent, 0);  
+		result = send(clientSocket, data + bytesSent, length - bytesSent, 0);  
 
 		if (result < 1)
 		{
@@ -323,9 +313,9 @@ int Server::alanticChase(int clientSocket, char* data, int32_t length)
 }
 
 
-int Server::sendMessage(int clientSocket, char* data, int32_t length) 
+int Server::sendMessage(int clientSocket, const char* data, int32_t length) 
 {
-	if (length < 0 || length > 255) 
+	if (length < 0) 
 	{
 		return PARAMETER_ERROR;
 	}
@@ -343,3 +333,4 @@ void Server::stop()
 	closesocket(listenSocket);
 	closesocket(newClientSocket);
 }
+

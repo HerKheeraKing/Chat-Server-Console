@@ -146,21 +146,21 @@ void Functions::chatCapacity()
     }
 }
 
-void Functions::saveChat()  
-{
-    buffer.push_back("Welcome to your server, use '@' for commands & '@help' for list of commands.\r\n"); 
-    buffer.push_back(""); 
-    buffer.push_back("...");  
-}
-
-void Functions::restoreChat(std::string input) 
-{
-    
-
-    for (auto& a : buffer)    
-    {
-        std::cout << a << std::endl;     
-    }
-}
+//void Functions::saveChat()  
+//{
+//    buffer.push_back("Welcome to your server, use '@' for commands & '@help' for list of commands.\r\n"); 
+//    buffer.push_back(""); 
+//    buffer.push_back("...");  
+//}
+//
+//void Functions::restoreChat(std::string input) 
+//{
+//    
+//
+//    for (auto& a : buffer)    
+//    {
+//        std::cout << a << std::endl;     
+//    }
+//}
 
 

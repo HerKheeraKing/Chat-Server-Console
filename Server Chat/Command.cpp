@@ -16,17 +16,18 @@ std::string Command::setCommandCase(std::string& commandCase)
         returnMsg += "@logout - handles user disconnection. \n\033[GParameters: none\n\n\033[G";
         returnMsg += "@getlog - provides the content of the log file that includes the public messages to the client who initiated the request. \n\033[GParameters: none\n\n\033[G";
         returnMsg += "@send username message – overrides messages being sent to all users, user with command can send to desired users. \n\033[GParameters: message & username of desired receiver\n\n\033[G";
-        returnMsg += "@help - provides active clients with the list of available commands on the server. \n\033[GParameters: none\n\033[G";
+        returnMsg += "@help - provides active clients with the list of available commands on the server. \n\033[GParameters: none\n\033[G"; 
     }
-    if (commandCase == "@exit") 
+
+    if (commandCase == "@exit")  
     {
-
+        returnMsg += "\033[2J\033[H \033[G";   
     }
 
 
 
 
-    return returnMsg;
+    return returnMsg; 
 }
 
 

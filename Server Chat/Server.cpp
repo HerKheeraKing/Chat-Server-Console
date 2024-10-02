@@ -201,17 +201,11 @@ int Server::init(uint16_t port)
 					std::string userInput(messageBuffer);  
 					userInput.erase(userInput.size() - 2); 
 
-					if (userInput == "@help") 
+					if (userInput == "@help" || userInput == "@exit") 
 					{
-					  std::string sendMsgTxt = Command::setCommandCase(userInput); 
+					  std::string sendMsgTxt = Command::setCommandCase(userInput);   
 			
-					  sendMessage(clientSocket, sendMsgTxt.c_str(), static_cast<int32_t > (strlen(sendMsgTxt.c_str()))); 
-					}
-					else if (userInput == "@exit")
-					{
-						std::string text = Command::setCommandCase(userInput);  
-
-						func.restoreChat(text);   
+					  sendMessage(clientSocket, sendMsgTxt.c_str(), static_cast<int32_t > (strlen(sendMsgTxt.c_str())));  
 					}
 					else
 					{ 

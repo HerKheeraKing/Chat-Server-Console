@@ -1,5 +1,6 @@
 #pragma once
 #include "Server.h" 
+#include <unordered_map>
 
 
 
@@ -9,11 +10,12 @@ public:
 
 
 	// Members
-	static std::string commandCase;      
+	std::string commandCase;
+	std::unordered_map<std::string, std::string> usersSignUp;          
 
 
 	// Functions 
-	static std::string setCommandCase(std::string& commandCase);      
+	std::string setCommandCase(std::string& commandCase);      
 
 
 

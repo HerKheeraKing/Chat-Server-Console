@@ -28,6 +28,7 @@ public:
 	int serverPort = 0; 
 	int numReady = 0; 
 	char hostName[256] = "";
+	int users = 0;    
 	
 	// Functions 
 	int init(uint16_t port);

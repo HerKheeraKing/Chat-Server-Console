@@ -3,7 +3,8 @@
 using namespace std; 
 
    
-extern Functions func;    
+extern Functions func;  
+Command commands; 
 
 int Server::init(uint16_t port)
 {
@@ -109,8 +110,7 @@ int Server::init(uint16_t port)
 	// Master Set set-up
 	// Timeout in header
 	FD_ZERO(&masterSet); 
-	FD_SET(listenSocket, &masterSet);  
-	int users = 0; 
+	FD_SET(listenSocket, &masterSet);   
 
 	while (true)
 	{
@@ -137,20 +137,20 @@ int Server::init(uint16_t port)
 		        newClientSocket = accept(listenSocket, nullptr, nullptr);  
 				users++; 
 
-				// Checking for chat capacity 
-				if (users >= chatCapacity)   
-				{
-					std::cout << "Chat at full capacity. Please try again later." << std::endl;      
+				//// Checking for chat capacity 
+				//if (users >= chatCapacity)   
+				//{
+				//	std::cout << "Chat at full capacity. Please try again later." << std::endl;      
 
-					// At capacity message to GUI & server
-					// Handle new user coming in
-					const char* mess = "Chat is currently full. Please try again later. ";  
-					size_t length = strlen(mess);  
-					send(newClientSocket, (char*)mess, static_cast<int32_t>(length), 0);  
-					closesocket(newClientSocket);  
-					users--; 
-					continue;  
-				}
+				//	// At capacity message to GUI & server
+				//	// Handle new user coming in
+				//	const char* mess = "Chat is currently full. Please try again later. ";  
+				//	size_t length = strlen(mess);  
+				//	send(newClientSocket, (char*)mess, static_cast<int32_t>(length), 0);  
+				//	closesocket(newClientSocket);  
+				//	users--; 
+				//	continue;  
+				//}
 
 				// Error checking new client socket 
 				if (newClientSocket == INVALID_SOCKET) 
@@ -201,9 +201,9 @@ int Server::init(uint16_t port)
 					std::string userInput(messageBuffer);  
 					userInput.erase(userInput.size() - 2); 
 
-					if (userInput == "@help" || userInput == "@exit") 
+					if (userInput == "@help" || userInput == "@exit" || userInput.substr(0, 9) == "@register")
 					{
-					  std::string sendMsgTxt = Command::setCommandCase(userInput);   
+					  std::string sendMsgTxt = commands.setCommandCase(userInput);      
 			
 					  sendMessage(clientSocket, sendMsgTxt.c_str(), static_cast<int32_t > (strlen(sendMsgTxt.c_str())));  
 					}

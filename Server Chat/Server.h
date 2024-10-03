@@ -32,10 +32,10 @@ public:
 	
 	// Functions 
 	int init(uint16_t port);
-	int readMessage(int clientSocket, char* buffer, int32_t size);
-	int sendMessage(int clientSocket, const char* data, int32_t length);
-	int alanticChase(int clientSocket, const char* data, int32_t length);
-	void stop();
+	int readMessage(SOCKET clientSocket, char* buffer, int32_t size);  
+	int sendMessage(SOCKET clientSocket, const char* data, int32_t length); 
+	int alanticChase(SOCKET clientSocket, const char* data, int32_t length); 
+	void stop(); 
 	 
 	// Sockets 
 	SOCKET listenSocket;

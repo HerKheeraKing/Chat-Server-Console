@@ -187,25 +187,26 @@ int Server::init(uint16_t port)
 
 				// Accept new message 
 				// Input 
-				int input = recv(clientSocket, messageBuffer, 4096, 0);    
-				if (input <= 0) 
+				int input = readMessage(clientSocket, messageBuffer, 4096);     
+				if (input < 0) 
 				{
 					// Disconnect 
 					closesocket(clientSocket); 
 					FD_CLR(clientSocket, &masterSet);  
 					users--; 
 				}
-				else 
-				{
+				else if (messageBuffer[0] != '\0')
+				{ 
 					// If user uses command 
-					std::string userInput(messageBuffer);  
-					userInput.erase(userInput.size() - 2); 
+					std::string userInput(messageBuffer); 
 
-					if (userInput == "@help" || userInput == "@exit" || userInput.substr(0, 9) == "@register")
+					std::string command = userInput.substr(1);    
+
+					if (command == "@help" || command == "@exit" || command.substr(0, 9) == "@register")
 					{
-					  std::string sendMsgTxt = commands.setCommandCase(userInput);      
+					  std::string sendMsgTxt = commands.setCommandCase(command);       
 			
-					  sendMessage(clientSocket, sendMsgTxt.c_str(), static_cast<int32_t > (strlen(sendMsgTxt.c_str())));  
+					  sendMessage(clientSocket, sendMsgTxt.c_str(), static_cast<int32_t>(sendMsgTxt.size() + 1));
 					}
 					else
 					{ 
@@ -213,18 +214,18 @@ int Server::init(uint16_t port)
 						for (int i = 0; i < masterSet.fd_count; i++)
 						{
 							// Sock to handle message sending 
-							SOCKET sendSock = masterSet.fd_array[i];
-							if (sendSock != listenSocket && sendSock != clientSocket)
+							SOCKET sendSock = masterSet.fd_array[i]; 
+							if (sendSock != listenSocket && sendSock != clientSocket) 
 							{
 								// Create object to build message 
 								// Output user format
 								// Convert from object to string
-								ostringstream ss;
-								ss << "User " << clientSocket << ": " << messageBuffer << "\r\n";
-								std::string strOut = ss.str();
+								ostringstream ss; 
+								ss << "User " << clientSocket << ": " << messageBuffer << "\r"; 
+								std::string strOut = ss.str(); 
 
-								send(sendSock, strOut.c_str(), strOut.size() + 1, 0);
-							}
+								sendMessage(sendSock, strOut.c_str(), static_cast<int32_t>(strOut.size() + 1));   
+							} 
 						}
 					}
 				}
@@ -237,23 +238,27 @@ int Server::init(uint16_t port)
 }
 
  
-int Server::readMessage(int clientSocket, char* buffer, int32_t size)           
+int Server::readMessage(SOCKET clientSocket, char* buffer, int32_t size)            
 {
-	int total = 0;
+	int total = 0; 
 
 	// Get length of data
-	uint8_t length = 0;
-	int messLength = recv(clientSocket, (char*)&length, 1, 0);  
+	uint8_t length = 0; 
+	int messLength = recv(clientSocket, (char*)&length, 1, 0);   
 
-	if (messLength < 1 || length == 0) 
+	if (messLength < 1 || length == 0)  
 	{
 		return SHUTDOWN; 
 	}
-
-	if (length > size) 
+	 
+	if (length > size - 1) 
 	{
-		return PARAMETER_ERROR; 
+		return PARAMETER_ERROR;  
 	}
+
+	// Add it
+	buffer[total] = (char)length; 
+	total++;  
 
 	do
 	{
@@ -263,25 +268,27 @@ int Server::readMessage(int clientSocket, char* buffer, int32_t size)
 		{
 			if (messLength == -1)
 			{
-				return DISCONNECT;
+				return DISCONNECT; 
 			}
 
-			return SHUTDOWN;
+			return SHUTDOWN; 
 		}
 		else
 		{
-			total += messLength;
+			total += messLength; 
 		}
 
-	} while (total < length);
+	} while (total < length);  
 
 	buffer[total] = '\0'; 
 
-	return SUCCESS;
+	return SUCCESS; 
+
+	
 }
 
 
-int Server::alanticChase(int clientSocket, const char* data, int32_t length) 
+int Server::alanticChase(SOCKET clientSocket, const char* data, int32_t length)  
 {
 	int bytesSent = 0;
 	int result;
@@ -304,19 +311,22 @@ int Server::alanticChase(int clientSocket, const char* data, int32_t length)
 	}
 
 	return bytesSent;
+
+
 }
 
 
-int Server::sendMessage(int clientSocket, const char* data, int32_t length) 
+int Server::sendMessage(SOCKET clientSocket, const char* data, int32_t length)  
 {
-	if (length < 0) 
+
+	if (length < 0 || length > 255) 
 	{
 		return PARAMETER_ERROR;
 	}
 
-	alanticChase(clientSocket, (char*)&length, 1);
-	alanticChase(clientSocket, data, length);
-	  
+	alanticChase(clientSocket, (char*)&length, 1); 
+	alanticChase(clientSocket, data, length); 
+
 	return SUCCESS;
 }
 

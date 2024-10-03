@@ -59,14 +59,14 @@ std::string Command::setCommandCase(std::string& commandCase)
             // Check 
             if (username.empty() || password.empty()) 
             {
-                returnMsg += "\nInvalid input, password & username are required.";
+                returnMsg += "Invalid input, password & username are required.";
                 return returnMsg; 
             }
 
             // Check for spaces 
             if (username.find(' ') != string::npos || password.find(' ') != string::npos) 
             {
-                returnMsg += "Invalid input, password & username cannot contain spaces.\n\n\033[G"; 
+                returnMsg += "Invalid input, password & username cannot contain spaces."; 
                 return returnMsg;  
             }
 
@@ -76,19 +76,20 @@ std::string Command::setCommandCase(std::string& commandCase)
                 // At capacity message to GUI & server
                 // Handle new user coming in
                 std::cout << "Chat at full capacity. User '" << server.clientSocket << " 'should try again later to register." << std::endl;
-                returnMsg += "\nChat is currently full, registration failed. Please try again later.\n\n\033[G ";  
+                returnMsg += "Chat is currently full, registration failed. Please try again later. ";  
                 return returnMsg; 
             }
                 // Get username 
             if (usersSignUp.find(username) != usersSignUp.end())  
             {
-                returnMsg += "Username already exist!\n\n\033[G "; 
+                returnMsg += "Username already exist! "; 
                 return returnMsg; 
             } 
 
             // Add
             usersSignUp[username] = password;  
-            returnMsg += "Registration successful!\n\n\033[G "; 
+            returnMsg += "Registration successful! ";  
+            
     }
 
 

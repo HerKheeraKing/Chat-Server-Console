@@ -205,8 +205,12 @@ int Server::init(uint16_t port)
 					if (command == "@help" || command == "@clear" || command.substr(0, 9) == "@register")
 					{
 					  std::string sendMsgTxt = commands.setCommandCase(command);       
-			
-					  sendMessage(clientSocket, sendMsgTxt.c_str(), static_cast<int32_t>(sendMsgTxt.size() + 1));
+			           
+					  if (!(sendMsgTxt.empty())) 
+					  {
+						  sendMessage(clientSocket, sendMsgTxt.c_str(), static_cast<int32_t>(sendMsgTxt.size() + 1));        
+					  }
+					  
 					}
 					else
 					{ 
@@ -221,7 +225,7 @@ int Server::init(uint16_t port)
 								// Output user format
 								// Convert from object to string
 								ostringstream ss; 
-								ss << "User " << clientSocket << ": " << messageBuffer << "\r"; 
+								ss << "User " << clientSocket << ": " << messageBuffer << ""; 
 								std::string strOut = ss.str(); 
 
 								sendMessage(sendSock, strOut.c_str(), static_cast<int32_t>(strOut.size() + 1));   

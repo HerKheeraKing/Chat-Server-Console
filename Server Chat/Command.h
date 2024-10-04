@@ -12,7 +12,9 @@ public:
 
 	// Members
 	std::string commandCase;
-	std::string username = "";      
+	std::string username = "";
+	std::string password = "";  
+	std::vector<std::string> loggedIn; 
 	std::unordered_map<std::string, std::string> usersSignUp;          
 
 

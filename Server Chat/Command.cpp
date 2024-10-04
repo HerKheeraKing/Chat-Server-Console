@@ -38,9 +38,7 @@ std::string Command::setCommandCase(std::string& commandCase)
 
     if (commandCase.substr(0, 9) == "@register")
     {
-           
-   
-        std::string password = "";
+      
         std::istringstream ss(commandCase);
         std::string command;
 
@@ -89,6 +87,70 @@ std::string Command::setCommandCase(std::string& commandCase)
             saveUser();
             returnMsg += "Registration successful! ";  
             
+    }
+
+    if (commandCase.substr(0, 6) == "@login")  
+    {
+        // Read input
+        // Error check first 
+        // Login user if capcity is not maxed
+        // User account hashmap 
+
+        //input
+        std::istringstream ss(commandCase);
+        std::string command;
+
+        // Split 
+        ss >> command >> username; 
+        getline(ss, password); 
+
+        // Trim
+        if (!password.empty() && password[0] == ' ') 
+        {
+            password.erase(0, 1); 
+        }
+
+        // Check if input exist
+        if (username.empty() || password.empty()) 
+        {
+            returnMsg += "Invalid input, password & username are required to login."; 
+            return returnMsg; 
+        }
+
+        // If logged in 
+        if (std::find(loggedIn.begin(), loggedIn.end(), username) != loggedIn.end())   
+        {
+            returnMsg += "You're already logged in, please log out first.";
+            return returnMsg;
+        }
+
+        // Server's capacity is reached 
+        if (server.chatCapacity < server.users)  
+        {
+            // At capacity message to GUI & server  
+            std::cout << "Chat at full capacity. User '" << server.clientSocket << " 'should try again later to login." << std::endl;
+            returnMsg += "Chat is currently full, login failed. Please try again later. "; 
+            return returnMsg;
+        }
+
+        // Look up username 
+        if (usersSignUp.find(username) == usersSignUp.end()) 
+        {
+            returnMsg += "User not found.";
+            return returnMsg;
+        }
+
+        // Look up password 
+        if (usersSignUp[username] != password)    
+        {
+            returnMsg += "Incorrect password.";
+            return returnMsg;
+        }
+
+        // Log in
+        loggedIn.push_back(username); 
+        server.users++; 
+        returnMsg += "Login successful, welcome back " + username + " !"; 
     }
 
 

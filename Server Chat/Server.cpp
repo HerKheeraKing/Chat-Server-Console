@@ -135,7 +135,7 @@ int Server::init(uint16_t port)
 				
 				// Accept connection 
 		        newClientSocket = accept(listenSocket, nullptr, nullptr);  
-				users++; 
+				//users++; 
 
 				//// Checking for chat capacity 
 				//if (users >= chatCapacity)   
@@ -202,7 +202,7 @@ int Server::init(uint16_t port)
 
 					std::string command = userInput.substr(1);    
 
-					if (command == "@help" || command == "@clear" || command.substr(0, 9) == "@register")
+					if (command == "@help" || command == "@clear" || command.substr(0, 9) == "@register" || command.substr(0, 6) == "@login")
 					{
 					  std::string sendMsgTxt = commands.setCommandCase(command); 
 			           

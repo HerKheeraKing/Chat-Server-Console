@@ -48,6 +48,9 @@ void Error::ErrorCode(int error)
         std::cout << "Error occured during reading for ready sockets in select() use. Ready Socket Error." << std::endl;
         break;
 
+    case LOGIN_ERROR:
+        std::cout << "Error occured during login, check parameters. Login User Error." << std::endl;   
+
     default:
         std::cout << "Messenger encountered an unknown error. Unknown Error." << std::endl;
         break;

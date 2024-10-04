@@ -202,7 +202,7 @@ int Server::init(uint16_t port)
 
 					std::string command = userInput.substr(1);    
 
-					if (command == "@help" || command == "@clear" || command.substr(0, 9) == "@register" || command.substr(0, 6) == "@login")
+					if (command == "@help" || command == "@clear" || command.substr(0, 9) == "@register" || command.substr(0, 6) == "@login" || command == "@logout")
 					{
 					  std::string sendMsgTxt = commands.setCommandCase(command); 
 			           

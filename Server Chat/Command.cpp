@@ -153,6 +153,31 @@ std::string Command::setCommandCase(std::string& commandCase)
         returnMsg += "Login successful, welcome back " + username + " !"; 
     }
 
+    if (commandCase == "@logout") 
+    {
+        auto user = std::find(loggedIn.begin(), loggedIn.end(), username);
+
+        if (user != loggedIn.end()) 
+        {
+            // Remove from logged in vector 
+            // Send success message
+            loggedIn.erase(user); 
+            std::string goodBye = "You're logging out...come back soon!";  
+
+            server.sendMessage(server.clientSocket, goodBye.c_str(), static_cast<int32_t>(goodBye.size() + 1));
+
+            // Disconnect 
+            closesocket(server.clientSocket); 
+            FD_CLR(server.clientSocket, &server.masterSet);   
+            server.users--;
+        }
+        else 
+        {
+            returnMsg += "You're not logged in, please login in to gain access to chat!";
+        }
+        
+    }
+
 
 
 

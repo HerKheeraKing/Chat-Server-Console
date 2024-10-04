@@ -39,7 +39,7 @@ std::string Command::setCommandCase(std::string& commandCase)
     if (commandCase.substr(0, 9) == "@register")
     {
            
-        std::string username = "";
+   
         std::string password = "";
         std::istringstream ss(commandCase);
         std::string command;
@@ -86,6 +86,7 @@ std::string Command::setCommandCase(std::string& commandCase)
 
             // Add
             usersSignUp[username] = password;  
+            saveUser();
             returnMsg += "Registration successful! ";  
             
     }
@@ -94,6 +95,39 @@ std::string Command::setCommandCase(std::string& commandCase)
 
 
     return returnMsg; 
+}
+
+// Created function that will upload users info start of program
+void Command::uploadUser()
+{
+    std::ifstream file("accounts.txt");
+
+    if (file.is_open()) 
+    {
+        std::string username;
+        std::string password; 
+
+        // Take in file info (username, password)
+        while (file >> username >> password)
+        {
+            usersSignUp[username] = password;
+        }
+        file.close(); 
+    }
+}
+
+void Command::saveUser()
+{
+    std::ofstream file("accounts.txt"); 
+
+    if (file.is_open())
+    {
+        for (auto a : usersSignUp) 
+        {
+            file << a.first << " " << a.second << std::endl; 
+        }
+        file.close(); 
+    }
 }
 
 

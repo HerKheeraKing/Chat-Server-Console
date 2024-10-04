@@ -9,6 +9,7 @@
 // Instances
 Server server; 
 Functions func;
+Command commands;   
 
 int main()
 {
@@ -24,7 +25,8 @@ int main()
 
     func.TCPport(); 
     std::cout << "\n\n";   
-    func.chatCapacity();  
+    func.chatCapacity(); 
+    commands.uploadUser(); 
 
     // Bind with user port 
     server.init(server.tcpPort);           

@@ -29,6 +29,7 @@ public:
 	int numReady = 0; 
 	char hostName[256] = "";
 	int users = 0;    
+	//std::unordered_map<int, std::string> socketUser;
 	
 	// Functions 
 	int init(uint16_t port);

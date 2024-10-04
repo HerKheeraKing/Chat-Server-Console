@@ -4,7 +4,7 @@ using namespace std;
 
    
 extern Functions func;  
-Command commands; 
+extern Command commands; 
 
 int Server::init(uint16_t port)
 {
@@ -204,7 +204,7 @@ int Server::init(uint16_t port)
 
 					if (command == "@help" || command == "@clear" || command.substr(0, 9) == "@register")
 					{
-					  std::string sendMsgTxt = commands.setCommandCase(command);       
+					  std::string sendMsgTxt = commands.setCommandCase(command); 
 			           
 					  if (!(sendMsgTxt.empty())) 
 					  {
@@ -224,8 +224,8 @@ int Server::init(uint16_t port)
 								// Create object to build message 
 								// Output user format
 								// Convert from object to string
-								ostringstream ss; 
-								ss << "User " << clientSocket << ": " << messageBuffer << ""; 
+								ostringstream ss;  
+								ss << "User " << commands.usersSignUp[commands.username] << ": " << messageBuffer << ""; 
 								std::string strOut = ss.str(); 
 
 								sendMessage(sendSock, strOut.c_str(), static_cast<int32_t>(strOut.size() + 1));   

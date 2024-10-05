@@ -224,6 +224,45 @@ std::string Command::setCommandCase(std::string& commandCase)
         }
     }
 
+    if (commandCase.substr(0, 5) == "@send")
+    {
+        //input
+        std::istringstream ss(commandCase); 
+        std::string command; 
+        std::string mess;
+
+        // Split 
+        ss >> command >> username;  
+        getline(ss, mess);   
+
+        // Trim
+        if (!mess.empty() && username[0] == ' ')    
+        {
+            username.erase(0, 1);  
+        }
+
+        SOCKET soc = INVALID_SOCKET;  
+
+        for (const auto& pair : socUserMap) 
+        {
+            if(pair.second == username)
+            {
+                soc = pair.first;
+                break;
+            }
+        }
+
+        if (soc == INVALID_SOCKET) 
+        {
+            returnMsg += "User not found.";
+        }
+        else 
+        {
+            server.sendMessage(soc, mess.c_str(), static_cast<int32_t>(mess.size() + 1)); 
+            returnMsg += "Message sent."; 
+        }
+    }
+
 
 
     uploadCommands(commandCase);

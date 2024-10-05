@@ -181,6 +181,7 @@ int Server::init(uint16_t port)
 			}
 			else 
 			{
+
 				// Buffer 
 		    	char messageBuffer[4096] = ""; 
 				ZeroMemory(messageBuffer, 4096); 
@@ -194,6 +195,7 @@ int Server::init(uint16_t port)
 					closesocket(clientSocket); 
 					FD_CLR(clientSocket, &masterSet);  
 					users--; 
+					clientSocket = INVALID_SOCKET;  
 				}
 				else if (messageBuffer[0] != '\0')
 				{ 
@@ -214,22 +216,29 @@ int Server::init(uint16_t port)
 					}
 					else
 					{ 
-						// Send message to clients 
-						for (int i = 0; i < masterSet.fd_count; i++)
+						if (clientSocket != INVALID_SOCKET) 
 						{
-							// Sock to handle message sending 
-							SOCKET sendSock = masterSet.fd_array[i]; 
-							if (sendSock != listenSocket && sendSock != clientSocket) 
+							// Send message to clients 
+							for (int i = 0; i < masterSet.fd_count; i++)
 							{
-								// Create object to build message 
-								// Output user format
-								// Convert from object to string
-								ostringstream ss;  
-								ss << "User " << commands.usersSignUp[commands.username] << ": " << messageBuffer << ""; 
-								std::string strOut = ss.str(); 
+								// Sock to handle message sending 
+								SOCKET sendSock = masterSet.fd_array[i];
+								if (sendSock != listenSocket && sendSock != clientSocket)
+								{
+									// Create object to build message 
+									// Output user format
+									// Convert from object to string
+									ostringstream ss;
+									ss << "User " << clientSocket << ": " << messageBuffer << ""; 
+									std::string strOut = ss.str();
 
-								sendMessage(sendSock, strOut.c_str(), static_cast<int32_t>(strOut.size() + 1));   
-							} 
+									sendMessage(sendSock, strOut.c_str(), static_cast<int32_t>(strOut.size() + 1));
+								}
+							}
+						}
+						else 
+						{
+							return INVALID_SOCKET; 
 						}
 					}
 				}

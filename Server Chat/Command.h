@@ -12,10 +12,9 @@ public:
 
 	// Members
 	std::string commandCase;
-	std::string username = "";
-	std::string password = "";  
 	std::vector<std::string> loggedIn; 
-	std::unordered_map<std::string, std::string> usersSignUp;          
+	std::unordered_map<std::string, std::string> usersSignUp;  
+	std::unordered_map<SOCKET, std::string> socUserMap; 
 
 
 	// Functions 

@@ -4,10 +4,13 @@
 
  
 // Instances
-extern Server server; 
+extern Server server;
+
 
 std::string Command::setCommandCase(std::string& commandCase)
 {
+    std::string username = "";
+    std::string password = "";
     std::string returnMsg;
 
     if (commandCase == "@help")
@@ -38,7 +41,7 @@ std::string Command::setCommandCase(std::string& commandCase)
 
     if (commandCase.substr(0, 9) == "@register")
     {
-      
+        
         std::istringstream ss(commandCase);
         std::string command;
 
@@ -124,6 +127,14 @@ std::string Command::setCommandCase(std::string& commandCase)
             return returnMsg;
         }
 
+        // If trying to log in another accoutn while logged in 
+        if (socUserMap.find(server.clientSocket) != socUserMap.end())
+        {
+           // Cannot login another account until logged out 
+            returnMsg += "You're already logged in, cannot log into another user account before logging out.";
+            return returnMsg;
+        }
+
         // Server's capacity is reached 
         if (server.chatCapacity < server.users)  
         {
@@ -148,28 +159,33 @@ std::string Command::setCommandCase(std::string& commandCase)
         }
 
         // Log in
-        loggedIn.push_back(username); 
+        loggedIn.push_back(username); // List of users logged in 
+        socUserMap[server.clientSocket] = username; // Map of sockets assigned to username
         server.users++; 
         returnMsg += "Login successful, welcome back " + username + " !"; 
     }
 
     if (commandCase == "@logout") 
-    {
-        auto user = std::find(loggedIn.begin(), loggedIn.end(), username);
-
-        if (user != loggedIn.end()) 
+    { 
+        if (socUserMap.find(server.clientSocket) != socUserMap.end())
         {
-            // Remove from logged in vector 
-            // Send success message
+            // Remove from logged in vector & socket map
+            // Send success message\
+            std::string user = socUserMap[server.clientSocket];
+            auto user = std::find(loggedIn.begin(), loggedIn.end(), socUserMap[server.clientSocket]) ;
+            
             loggedIn.erase(user); 
-            std::string goodBye = "You're logging out...come back soon!";  
+            socUserMap.erase(server.clientSocket);
+            std::string goodBye = "You're logging out...come back soon!";
 
             server.sendMessage(server.clientSocket, goodBye.c_str(), static_cast<int32_t>(goodBye.size() + 1));
 
-            // Disconnect 
-            closesocket(server.clientSocket); 
-            FD_CLR(server.clientSocket, &server.masterSet);   
+            // Disconnect
+            shutdown(server.clientSocket, SD_BOTH);
+            closesocket(server.clientSocket);
+            FD_CLR(server.clientSocket, &server.masterSet);
             server.users--;
+            server.clientSocket = INVALID_SOCKET;
         }
         else 
         {

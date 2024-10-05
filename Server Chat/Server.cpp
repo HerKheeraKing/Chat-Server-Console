@@ -218,6 +218,7 @@ int Server::init(uint16_t port)
 					{ 
 						if (clientSocket != INVALID_SOCKET) 
 						{
+							commands.uploadMessages(messageBuffer); 
 							// Send message to clients 
 							for (int i = 0; i < masterSet.fd_count; i++)
 							{

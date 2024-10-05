@@ -264,12 +264,13 @@ void Command::uploadCommands(std::string cmd)
     }
 }
 
-void Command::uploadMessages() 
+void Command::uploadMessages(std::string mess) 
 {
-    std::ofstream file("Messages.txt");  
+    std::ofstream file("Messages.txt", std::ios::app);   
 
     if (file.is_open()) 
     {
+        file << mess << ", ";
         
         file.close(); 
     }

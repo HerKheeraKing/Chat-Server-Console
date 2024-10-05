@@ -26,7 +26,7 @@ public:
 
 	void uploadCommands(std::string cmd); 
 
-	void uploadMessages(); 
+	void uploadMessages(std::string mess); 
 
 };
 

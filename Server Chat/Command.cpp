@@ -207,9 +207,14 @@ std::string Command::setCommandCase(std::string& commandCase)
 
     } 
 
+    if (commandCase == "getlog") 
+    {
+       
+    }
 
 
 
+    uploadCommands(commandCase);
     return returnMsg; 
 }
 
@@ -242,6 +247,30 @@ void Command::saveUser()
         {
             file << a.first << " " << a.second << std::endl; 
         }
+        file.close(); 
+    }
+}
+
+void Command::uploadCommands(std::string cmd)   
+{
+    std::ofstream file("Commands.txt");  
+
+    if (file.is_open()) 
+    {
+        file << cmd << std::endl;
+
+        
+        file.close(); 
+    }
+}
+
+void Command::uploadMessages() 
+{
+    std::ofstream file("Messages.txt");  
+
+    if (file.is_open()) 
+    {
+        
         file.close(); 
     }
 }

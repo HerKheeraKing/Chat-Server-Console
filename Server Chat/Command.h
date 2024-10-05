@@ -24,5 +24,9 @@ public:
 
 	void saveUser();
 
+	void uploadCommands(std::string cmd); 
+
+	void uploadMessages(); 
+
 };
 

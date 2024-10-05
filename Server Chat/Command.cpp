@@ -207,9 +207,21 @@ std::string Command::setCommandCase(std::string& commandCase)
 
     } 
 
-    if (commandCase == "getlog") 
+    if (commandCase == "@getlog") 
     {
-       
+        std::ifstream file("Messages.txt");
+
+        if (file.is_open())
+        {
+            std::string mess;
+
+            // Take in messgaes into file
+            while (file >> mess)
+            {
+                returnMsg += mess;
+            }
+            file.close();
+        }
     }
 
 
@@ -270,7 +282,7 @@ void Command::uploadMessages(std::string mess)
 
     if (file.is_open()) 
     {
-        file << mess << ", ";
+        file << mess << ",   ";
         
         file.close(); 
     }

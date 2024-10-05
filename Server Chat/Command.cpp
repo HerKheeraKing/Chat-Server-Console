@@ -194,6 +194,19 @@ std::string Command::setCommandCase(std::string& commandCase)
         
     }
 
+    if (commandCase == "@getlist") 
+    {
+        returnMsg = "Users logged in: "; 
+
+        for (int i = 0; i < loggedIn.size(); i++)
+        {
+            returnMsg += loggedIn[i] + ", "; 
+        }
+
+        returnMsg.erase(returnMsg.size() - 2);  
+
+    } 
+
 
 
 
